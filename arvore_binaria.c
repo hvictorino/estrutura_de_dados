@@ -6,21 +6,60 @@ typedef struct No{
 	int conteudo;
 	struct No *esq;
 	struct No *dir;
+	int balanco;
+	int altura;
 } No;
 
-No *inserir(No *pRaiz, int numero){
+No *inserir(No *pRaiz, int valor){
 	if(pRaiz == NULL){
 		No *novo = (No*)malloc(sizeof(No));
-		novo->conteudo = numero;
+		novo->conteudo = valor;
 		novo->esq = NULL;
 		novo->dir = NULL;
+		
+		
 		return novo;
 	}else{
-		if(numero < pRaiz->conteudo)
-			pRaiz->esq = inserir(pRaiz->esq, numero);
-		if(numero > pRaiz->conteudo)
-			pRaiz->dir = inserir(pRaiz->dir, numero);
+		if(valor < pRaiz->conteudo)
+		{
+			pRaiz->esq = inserir(pRaiz->esq, valor);
+		}
+			
+		if(valor > pRaiz->conteudo)
+		{
+			pRaiz->dir = inserir(pRaiz->dir, valor);
+		}
+		
 		return pRaiz;
+	}
+}
+
+int buscar(No *pRaiz, int valor){
+	if(pRaiz == NULL)
+		return 0;
+	else{
+		if(pRaiz->conteudo == valor)
+			return 1;
+		else{
+			if(valor < pRaiz->conteudo)
+				return buscar(pRaiz->esq, valor);
+			else
+				return buscar(pRaiz->dir, valor);
+		}
+	}
+}
+
+int alturaArv(No *pRaiz){
+	if(pRaiz == NULL || pRaiz->esq &&pRaiz->dir == NULL)
+		return 0;
+	else{
+		int esq = 1 + alturaArv(pRaiz->esq);
+		int dir = 1 + alturaArv(pRaiz->dir);
+		
+		if(esq > dir)
+			return esq;
+		else
+			return dir;
 	}
 }
 
@@ -87,7 +126,7 @@ No *remover(No *pRaiz, int valor){
 					pRaiz->conteudo = aux->conteudo;
 					aux->conteudo = valor;
 					
-					pRaiz->esq = remover(pRaiz->esq, chave);
+					pRaiz->esq = remover(pRaiz->esq, valor);
 					
 					return pRaiz;
 				}
@@ -106,10 +145,11 @@ int main()
 {
 	setlocale(LC_ALL,"Portuguese");
 	No *pRaiz = NULL;
-	int op, numero;
+	int op, valor;
+	int tipoImp;
 	
 	do{
-		printf("\n0 - Sair\n1 - Inserir\n2 - Imprimir\n3 - Remover\n");
+		printf("\n0 - Sair\n1 - Inserir\n2 - Imprimir\n3 - Remover\n4 - Buscar\n5 - Altura\n");
 		scanf("%d",&op);
 		
 		switch(op){
@@ -137,18 +177,27 @@ int main()
 				break;
 			case 2:
 				printf("\n");
-				imprimir(pRaiz, 1);
-				printf("\n");
-				imprimir(pRaiz, 2);
-				printf("\n");
-				imprimir(pRaiz, 3);
+				printf("\nEscolha um tipo de impressão\n1 - InOrdem\n2 - PreOrdem\n3 - PosOrdem\n");
+				scanf("%d",&tipoImp);
+				printf("\nImpressão %s\n",tipoImp == 1 ? "InOrdem":tipoImp == 2? "PreOrdem":"PosOrdem");
+				imprimir(pRaiz, tipoImp);
 				printf("\n");
 				break;
 			case 3:
-				printf("Digite o valor a ser inserido: ");
-				scanf("%d",&numero);
-				pRaiz = remover(pRaiz, numero);
+				printf("Digite o valor a ser removido: ");
+				scanf("%d",&valor);
+				pRaiz = remover(pRaiz, valor);
 				break;
+			case 4:
+				printf("\nDigite o valor a buscar: ");
+				scanf("%d",&valor);
+				if(buscar(pRaiz, valor))
+					printf("\nValor encontrado!\n");
+				else
+					printf("\nValor não encontrado!\n");
+				break;
+			case 5:
+				printf("\nAltura da árvore: %d",alturaArv(pRaiz));
 			default:
 				printf("\nOpção inválida.\n");
 			
