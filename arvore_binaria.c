@@ -43,8 +43,23 @@ int buscar(No *pRaiz, int valor){
 		else{
 			if(valor < pRaiz->conteudo)
 				return buscar(pRaiz->esq, valor);
-			else
+			if(valor > pRaiz->conteudo)
 				return buscar(pRaiz->dir, valor);
+		}
+	}
+}
+
+No *buscarNo(No *pRaiz, int valor){
+	if(pRaiz == NULL)
+		return NULL;
+	else{
+		if(pRaiz->conteudo == valor)
+			return pRaiz;
+		else{
+			if(valor < pRaiz->conteudo)
+				return buscarNo(pRaiz->esq, valor);
+			if(valor > pRaiz->conteudo)
+				return buscarNo(pRaiz->dir, valor);
 		}
 	}
 }
@@ -61,6 +76,14 @@ int alturaArv(No *pRaiz){
 		else
 			return dir;
 	}
+}
+
+int alturaSubArv(No *pRaiz, int valor){
+	No *no = buscarNo(pRaiz, valor);
+	if(no)
+		return alturaArv(no);
+	else
+		return -1;
 }
 
 void imprimir(No *pRaiz, int tipoImp){
@@ -85,7 +108,7 @@ void imprimir(No *pRaiz, int tipoImp){
 				printf("%d ",pRaiz->conteudo);
 				break;
 			default:
-				printf("\nTipo de impress„o inv·lida.\n");
+				printf("\nTipo de impress√£o inv√°lida.\n");
 				
 		}
 	}
@@ -93,7 +116,7 @@ void imprimir(No *pRaiz, int tipoImp){
 
 No *remover(No *pRaiz, int valor){
 	if(pRaiz == NULL){
-		printf("Valor n„o encontrado!\n");
+		printf("Valor n√£o encontrado!\n");
 		return NULL;
 	}else{
 		if(pRaiz->conteudo == valor){
@@ -101,13 +124,13 @@ No *remover(No *pRaiz, int valor){
 			int esquerda = pRaiz->esq != NULL;
 			int direita = pRaiz->dir != NULL;
 			
-			// remove nÛs folhas
+			// remove n√≥s folhas
 			if(!esquerda && !direita)
 			{
 				free(pRaiz);
 				return NULL;
 			}else{
-				// remove nÛs que tÍm apenas um filho
+				// remove n√≥s que t√™m apenas um filho
 				if(!esquerda || !direita){
 					No *aux;
 					if(esquerda && !direita)
@@ -118,7 +141,7 @@ No *remover(No *pRaiz, int valor){
 					free(pRaiz);
 					return aux;
 				}else{
-					// remove nÛs que tÍm dois filhos
+					// remove n√≥s que t√™m dois filhos
 					No *aux = pRaiz->esq;
 					while(aux->dir != NULL)
 						aux = aux->dir;
@@ -149,7 +172,7 @@ int main()
 	int tipoImp;
 	
 	do{
-		printf("\n0 - Sair\n1 - Inserir\n2 - Imprimir\n3 - Remover\n4 - Buscar\n5 - Altura\n");
+		printf("\n0 - Sair\n1 - Inserir\n2 - Imprimir\n3 - Remover\n4 - Buscar\n5 - Altura\n6 - Altura da Sub-√°rvore\n");
 		scanf("%d",&op);
 		
 		switch(op){
@@ -177,9 +200,9 @@ int main()
 				break;
 			case 2:
 				printf("\n");
-				printf("\nEscolha um tipo de impress„o\n1 - InOrdem\n2 - PreOrdem\n3 - PosOrdem\n");
+				printf("\nEscolha um tipo de impress√£o\n1 - InOrdem\n2 - PreOrdem\n3 - PosOrdem\n");
 				scanf("%d",&tipoImp);
-				printf("\nImpress„o %s\n",tipoImp == 1 ? "InOrdem":tipoImp == 2? "PreOrdem":"PosOrdem");
+				printf("\nImpress√£o %s\n",tipoImp == 1 ? "InOrdem":tipoImp == 2? "PreOrdem":"PosOrdem");
 				imprimir(pRaiz, tipoImp);
 				printf("\n");
 				break;
@@ -194,12 +217,18 @@ int main()
 				if(buscar(pRaiz, valor))
 					printf("\nValor encontrado!\n");
 				else
-					printf("\nValor n„o encontrado!\n");
+					printf("\nValor n√£o encontrado!\n");
 				break;
 			case 5:
-				printf("\nAltura da ·rvore: %d",alturaArv(pRaiz));
+				printf("\nAltura da √°rvore: %d",alturaArv(pRaiz));
+				break;
+			case 6:
+				printf("\nDigite o valor do n√≥ que quer saber a altura: ");
+				scanf("%d",&valor);
+				printf("\nAltura da sub-√°rvore desse n√≥ √©: %d\n",alturaSubArv(pRaiz, valor));
+				break;
 			default:
-				printf("\nOpÁ„o inv·lida.\n");
+				printf("\nOp√ß√£o inv√°lida.\n");
 			
 		}
 	}while(op != 0);
