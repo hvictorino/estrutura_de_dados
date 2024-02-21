@@ -165,7 +165,7 @@ No *remover(No *pRaiz, int valor){
 }
 
 void balanceamento(){
-	printf("mais um teste de commit de nova branch");
+	printf("excluí a branch da origin sem excluir a branch local, depois alterei a branch local");
 }
 
 int main()
