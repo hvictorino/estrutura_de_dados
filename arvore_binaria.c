@@ -164,10 +164,6 @@ No *remover(No *pRaiz, int valor){
 	}
 }
 
-void novaFuncao(){
-	printf("Teste de commit via visual studio");
-}
-
 int main()
 {
 	setlocale(LC_ALL,"Portuguese");
