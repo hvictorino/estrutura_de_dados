@@ -164,6 +164,10 @@ No *remover(No *pRaiz, int valor){
 	}
 }
 
+void balanceamento(){
+
+}
+
 int main()
 {
 	setlocale(LC_ALL,"Portuguese");
