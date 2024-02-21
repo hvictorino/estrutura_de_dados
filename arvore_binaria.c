@@ -7,7 +7,6 @@ typedef struct No{
 	struct No *esq;
 	struct No *dir;
 	int balanco;
-	int altura;
 } No;
 
 No *inserir(No *pRaiz, int valor){
@@ -16,19 +15,13 @@ No *inserir(No *pRaiz, int valor){
 		novo->conteudo = valor;
 		novo->esq = NULL;
 		novo->dir = NULL;
-		
-		
 		return novo;
 	}else{
 		if(valor < pRaiz->conteudo)
-		{
 			pRaiz->esq = inserir(pRaiz->esq, valor);
-		}
 			
 		if(valor > pRaiz->conteudo)
-		{
 			pRaiz->dir = inserir(pRaiz->dir, valor);
-		}
 		
 		return pRaiz;
 	}
@@ -108,7 +101,7 @@ void imprimir(No *pRaiz, int tipoImp){
 				printf("%d ",pRaiz->conteudo);
 				break;
 			default:
-				printf("\nTipo de impress√£o inv√°lida.\n");
+				printf("\nTipo de impress„o inv·lida.\n");
 				
 		}
 	}
@@ -116,7 +109,7 @@ void imprimir(No *pRaiz, int tipoImp){
 
 No *remover(No *pRaiz, int valor){
 	if(pRaiz == NULL){
-		printf("Valor n√£o encontrado!\n");
+		printf("Valor n„o encontrado!\n");
 		return NULL;
 	}else{
 		if(pRaiz->conteudo == valor){
@@ -124,13 +117,13 @@ No *remover(No *pRaiz, int valor){
 			int esquerda = pRaiz->esq != NULL;
 			int direita = pRaiz->dir != NULL;
 			
-			// remove n√≥s folhas
+			// remove nÛs folhas
 			if(!esquerda && !direita)
 			{
 				free(pRaiz);
 				return NULL;
 			}else{
-				// remove n√≥s que t√™m apenas um filho
+				// remove nÛs que tÍm apenas um filho
 				if(!esquerda || !direita){
 					No *aux;
 					if(esquerda && !direita)
@@ -141,7 +134,7 @@ No *remover(No *pRaiz, int valor){
 					free(pRaiz);
 					return aux;
 				}else{
-					// remove n√≥s que t√™m dois filhos
+					// remove nÛs que tÍm dois filhos
 					No *aux = pRaiz->esq;
 					while(aux->dir != NULL)
 						aux = aux->dir;
@@ -165,7 +158,8 @@ No *remover(No *pRaiz, int valor){
 }
 
 void balanceamento(){
-	printf("exclu√≠ a branch da origin sem excluir a branch local, depois alterei a branch local");
+	printf("excluÌ a branch da origin sem excluir a branch local, depois alterei a branch local");
+	printf("\nadicionado printf no devc++·");
 }
 
 int main()
@@ -176,7 +170,13 @@ int main()
 	int tipoImp;
 	
 	do{
-		printf("\n0 - Sair\n1 - Inserir\n2 - Imprimir\n3 - Remover\n4 - Buscar\n5 - Altura\n6 - Altura da Sub-√°rvore\n");
+		printf("\n0 - Sair");
+		printf("\n1 - Inserir");
+		printf("\n2 - Imprimir");
+		printf("\n3 - Remover");
+		printf("\n4 - Buscar");
+		printf("\n5 - Altura");
+		printf("\n6 - Altura da Sub-·rvore\n");
 		scanf("%d",&op);
 		
 		switch(op){
@@ -204,9 +204,9 @@ int main()
 				break;
 			case 2:
 				printf("\n");
-				printf("\nEscolha um tipo de impress√£o\n1 - InOrdem\n2 - PreOrdem\n3 - PosOrdem\n");
+				printf("\nEscolha um tipo de impress„o\n1 - InOrdem\n2 - PreOrdem\n3 - PosOrdem\n");
 				scanf("%d",&tipoImp);
-				printf("\nImpress√£o %s\n",tipoImp == 1 ? "InOrdem":tipoImp == 2? "PreOrdem":"PosOrdem");
+				printf("\nImpress„o %s\n",tipoImp == 1 ? "InOrdem":tipoImp == 2? "PreOrdem":"PosOrdem");
 				imprimir(pRaiz, tipoImp);
 				printf("\n");
 				break;
@@ -221,21 +221,22 @@ int main()
 				if(buscar(pRaiz, valor))
 					printf("\nValor encontrado!\n");
 				else
-					printf("\nValor n√£o encontrado!\n");
+					printf("\nValor n„o encontrado!\n");
 				break;
 			case 5:
-				printf("\nAltura da √°rvore: %d",alturaArv(pRaiz));
+				printf("\nAltura da ·rvore: %d",alturaArv(pRaiz));
 				break;
 			case 6:
-				printf("\nDigite o valor do n√≥ que quer saber a altura: ");
+				printf("\nDigite o valor do nÛ que quer saber a altura: ");
 				scanf("%d",&valor);
-				printf("\nAltura da sub-√°rvore desse n√≥ √©: %d\n",alturaSubArv(pRaiz, valor));
+				printf("\nAltura da sub-·rvore desse nÛ È: %d\n",alturaSubArv(pRaiz, valor));
 				break;
 			default:
-				printf("\nOp√ß√£o inv√°lida.\n");
+				printf("\nOpÁ„o inv·lida.\n");
 			
 		}
 	}while(op != 0);
 		
 	return 0;
 }
+
