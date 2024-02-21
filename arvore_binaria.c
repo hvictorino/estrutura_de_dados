@@ -165,7 +165,7 @@ No *remover(No *pRaiz, int valor){
 }
 
 void balanceamento(){
-
+	printf("mais um teste de commit de nova branch");
 }
 
 int main()
