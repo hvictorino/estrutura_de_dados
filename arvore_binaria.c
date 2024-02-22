@@ -4,239 +4,226 @@
 
 typedef struct No{
 	int conteudo;
+	short altura;
 	struct No *esq;
 	struct No *dir;
-	int balanco;
 } No;
 
-No *inserir(No *pRaiz, int valor){
-	if(pRaiz == NULL){
-		No *novo = (No*)malloc(sizeof(No));
+/*
+	Função que cria um novo nó
+	valor -> valor a ser inserido no nó
+	Retorna: o endereço do nó criado
+*/
+No *novoNo(int valor){
+	No *novo = malloc(sizeof(No));
+	if(novo){
 		novo->conteudo = valor;
 		novo->esq = NULL;
 		novo->dir = NULL;
-		return novo;
-	}else{
-		if(valor < pRaiz->conteudo)
-			pRaiz->esq = inserir(pRaiz->esq, valor);
-			
-		if(valor > pRaiz->conteudo)
-			pRaiz->dir = inserir(pRaiz->dir, valor);
-		
-		return pRaiz;
-	}
+		novo->alura = 0;
+	}else
+		printf("\nERRO ao alocar nó em novoNo!\n");
+	
+	return novo;
 }
 
-int buscar(No *pRaiz, int valor){
-	if(pRaiz == NULL)
-		return 0;
-	else{
-		if(pRaiz->conteudo == valor)
-			return 1;
-		else{
-			if(valor < pRaiz->conteudo)
-				return buscar(pRaiz->esq, valor);
-			if(valor > pRaiz->conteudo)
-				return buscar(pRaiz->dir, valor);
-		}
-	}
+/*
+	Retorna o maior dentre dois valores
+	a, b -> altura de dois nós da árvore
+*/
+short maior(short a, short b){
+	return a > b ? a : b;
 }
 
-No *buscarNo(No *pRaiz, int valor){
-	if(pRaiz == NULL)
-		return NULL;
-	else{
-		if(pRaiz->conteudo == valor)
-			return pRaiz;
-		else{
-			if(valor < pRaiz->conteudo)
-				return buscarNo(pRaiz->esq, valor);
-			if(valor > pRaiz->conteudo)
-				return buscarNo(pRaiz->dir, valor);
-		}
-	}
-}
-
-int alturaArv(No *pRaiz){
-	if(pRaiz == NULL || pRaiz->esq &&pRaiz->dir == NULL)
-		return 0;
-	else{
-		int esq = 1 + alturaArv(pRaiz->esq);
-		int dir = 1 + alturaArv(pRaiz->dir);
-		
-		if(esq > dir)
-			return esq;
-		else
-			return dir;
-	}
-}
-
-int alturaSubArv(No *pRaiz, int valor){
-	No *no = buscarNo(pRaiz, valor);
-	if(no)
-		return alturaArv(no);
-	else
+/*
+	Retorna a altura de um nó ou -1 caso ele seja nulo
+*/
+short alturaDoNo(No *no){
+	if(no == NULL)
 		return -1;
+	else
+		return no->altura;
 }
 
-void imprimir(No *pRaiz, int tipoImp){
-	if(pRaiz != NULL){
-		switch(tipoImp){
-			// EmOrdem
-			case 1:
-				imprimir(pRaiz->esq,tipoImp);
-				printf("%d ",pRaiz->conteudo);
-				imprimir(pRaiz->dir,tipoImp);
-				break;
-			// PreOrdem
-			case 2:
-				printf("%d ",pRaiz->conteudo);
-				imprimir(pRaiz->esq,tipoImp);
-				imprimir(pRaiz->dir,tipoImp);
-				break;
-			// PosOrdem
-			case 3:
-				imprimir(pRaiz->esq,tipoImp);
-				imprimir(pRaiz->dir,tipoImp);
-				printf("%d ",pRaiz->conteudo);
-				break;
-			default:
-				printf("\nTipo de impress�o inv�lida.\n");
-				
-		}
+/*
+	Calcula e retorna o fator de balanceamento de um nó
+*/
+short fatorDeBalanceamento(No *no){
+	if(no)
+		return (alturaDoNo(no->esq) - alturaDoNo(no->dir));
+	else
+		return 0;
+}
+
+/*
+	Função para a rotação à esquerda
+*/
+No *rotacaoEsquerda(No *raiz){
+	No *p, *q;
+	
+	p = raiz->dir;
+	q = p->esq;
+	
+	p->esq = raiz;
+	raiz->dir = q;
+	
+	raiz->altura = maior(alturaDoNo(raiz->esq), alturaDoNo(raiz->dir) + 1;
+	p->altura = maior(alturaDoNo(p->esq), alturaDoNo(p->dir) + 1;
+	
+	return p;
+}
+
+/*
+	Função para a rotação à direita
+*/
+No *rotacaoDireita(No *raiz){
+	No *p, *q;
+	
+	p = raiz->esq;
+	q = p->dir;
+	
+	p->dir = raiz;
+	raiz->esq = q;
+	
+	raiz->altura = maior(alturaDoNo(raiz->esq), alturaDoNo(raiz->dir) + 1;
+	p->altura = maior(alturaDoNo(p->esq), alturaDoNo(p->dir) + 1;
+	
+	return p;
+}
+
+/*
+	Função para a rotação direita-esquerda
+*/
+No *rotacaoDireitaEsquerda(No *raiz){
+	raiz->dir = rotacaoDireita(r->dir);
+	return rotacaoEsquerda(raiz);
+}
+
+/*
+	Função para a rotação esquerda-direita
+*/
+No *rotacaoEsquerdaDireita(No *raiz){
+	raiz->esq = rotacaoEsquerda(r->esq);
+	return rotacaoDireita(raiz);
+}
+
+/*
+	Insere um novo nó na árvore
+	raiz -> raiz da árvore
+	valor -> valor a ser inserido
+	Retorno: endereço do novo nó ou nova raiz após o balanceamento
+*/
+No *inserir(No *raiz, int valor){
+	if(raiz == NULL) // árvore vazia
+		return novoNo(valor);
+	else{
+		if(valor < raiz->valor)
+			raiz->esq = inserir(raiz->esq, valor);
+		if(valor > raiz-> valor)
+			raiz->dir = inserir(raiz->dir, valor);
+		if(valor == raiz->valor)
+			printf("\nJá existe um elemento de valor %d nesta árvore!\n", valor);
 	}
+	
+	// Recalcula a altura de todos os nós entre a raiz e o novo nó inserido
+	raiz->altura = maior(alturaDoNo(raiz->esq), alturaDoNo(raiz->dir) + 1;
+	
+	// verifica se é necessário rebalancear a árvore
+	raiz = balancear(raiz);
+	
+	return raiz;
 }
 
-No *remover(No *pRaiz, int valor){
-	if(pRaiz == NULL){
-		printf("Valor n�o encontrado!\n");
+/*
+	Função para realizar o balanceamento da árvore após uma inserção ou remoção
+	Recebe o nó que está desbalanceado e retorna a noa raiz após o balanceamento
+*/
+No *balancear(No *raiz){
+	short fb = fatorDeBalanceamento(raiz);
+	
+	// Rotação à esquerda
+	if(fb < -1 && fatorDeBalanceamento(raiz->dir) <= 0)
+		raiz = rotacaoEsquerda(raiz);
+	
+	// Rotação à direita
+	else if(fb > 1 && fatorDeBalanceamento(raiz->esq >= 0)
+		raiz = rotacaoDireita(raiz);
+	
+	// Rotação dupla à esquerda
+	else if(fb > 1 && fatorDeBalanceamento(raiz->esq) < 0)
+		raiz = rotacaoEsquerdaDireita(raiz);
+	
+	// Rotação dupla à direita
+	else if(fb < -1 && fatorDeBalanceamento(raiz->dir) > 0)
+		raiz = rotacaoDireitaEsquerda(raiz);
+	
+	return raiz;
+}
+
+/*
+	Remove um nó da árvore
+	raiz -> raiz da árvore
+	valor -> valor a ser removido
+*/
+No *remover(No *raiz, int valor){
+	if(raiz == NULL){
+		printf("Valor não encontrado\n");
 		return NULL;
-	}else{
-		if(pRaiz->conteudo == valor){
-			
-			int esquerda = pRaiz->esq != NULL;
-			int direita = pRaiz->dir != NULL;
-			
-			// remove n�s folhas
-			if(!esquerda && !direita)
-			{
-				free(pRaiz);
+	}else{ // procura o nó a remover
+		if(raiz->conteudo == valor){
+			// remove nós folhas
+			if(raiz->esq == NULL && raiz->dir == NULL){
+				free(raiz);
+				printf("Elemento folha removido: %d\n",valor);
 				return NULL;
 			}else{
-				// remove n�s que t�m apenas um filho
-				if(!esquerda || !direita){
-					No *aux;
-					if(esquerda && !direita)
-						aux = pRaiz->esq;
-					if(!esquerda && direita)
-						aux = pRaiz->dir;
-					
-					free(pRaiz);
-					return aux;
-				}else{
-					// remove n�s que t�m dois filhos
-					No *aux = pRaiz->esq;
+				// remover nós que possuem 2 filhos
+				if(raiz->esq != NULL && raiz->dir != NULL){
+					No *aux = raiz->esq;
 					while(aux->dir != NULL)
 						aux = aux->dir;
 					
-					pRaiz->conteudo = aux->conteudo;
+					raiz->conteudo = aux->conteudo;
 					aux->conteudo = valor;
+					printf("Elemento trocado: %d\n",valor);
+					raiz->esq = remover(raiz->esq, valor);
+					return raiz;
+				}else{
+					// remover nós que possuem apenas 1 filho
+					No *aux;
+					if(raiz->esq != NULL)
+						aux = raiz->esq;
+					else
+						aux = raiz->dir;
 					
-					pRaiz->esq = remover(pRaiz->esq, valor);
-					
-					return pRaiz;
+					free(raiz);
+					printf("Elemento com 1 filho removido: %d\n",valor);
+					return aux;
 				}
 			}
 		}else{
-			if(valor < pRaiz->conteudo)
-				pRaiz->esq = remover(pRaiz->esq, valor);
-			if(valor > pRaiz->conteudo)
-				pRaiz->dir = remover(pRaiz->dir, valor);
-			return pRaiz;
+			if(chave < raiz->conteudo)
+				raiz->esq = remover(raiz->esq, valor);
+			if(chave > raiz->conteudo)
+				raiz->dir = remover(raiz->dir, valor);
 		}
+		
+		// Recalcula a altura dos nós
+		raiz->altura = maior(alturaDoNo(raiz->esq), alturaDoNo(raiz->dir) + 1;
+		
+		// Faz o rebalanceamento caso seja necessário
+		raiz = balancear(raiz);
+		
+		return raiz;
 	}
 }
 
-void balanceamento(){
-	printf("exclu� a branch da origin sem excluir a branch local, depois alterei a branch local");
-	printf("\nadicionado printf no devc++�");
-}
 
-int main()
-{
+int main(){
 	setlocale(LC_ALL,"Portuguese");
-	No *pRaiz = NULL;
-	int op, valor;
-	int tipoImp;
 	
-	do{
-		printf("\n0 - Sair");
-		printf("\n1 - Inserir");
-		printf("\n2 - Imprimir");
-		printf("\n3 - Remover");
-		printf("\n4 - Buscar");
-		printf("\n5 - Altura");
-		printf("\n6 - Altura da Sub-�rvore\n");
-		scanf("%d",&op);
-		
-		switch(op){
-			case 0:
-				printf("\nPrograma encerrado...");
-				break;
-			case 1:
-				/*
-				printf("Digite o valor a ser inserido: ");
-				scanf("%d",&numero);
-				pRaiz = inserir(pRaiz, numero);
-				*/
-				pRaiz = inserir(pRaiz,34);
-				pRaiz = inserir(pRaiz,80);
-				pRaiz = inserir(pRaiz,55);
-				pRaiz = inserir(pRaiz,40);
-				pRaiz = inserir(pRaiz,43);
-				pRaiz = inserir(pRaiz,5);
-				pRaiz = inserir(pRaiz,13);
-				pRaiz = inserir(pRaiz,75);
-				pRaiz = inserir(pRaiz,1);
-				pRaiz = inserir(pRaiz,17);
-				pRaiz = inserir(pRaiz,26);
-				pRaiz = inserir(pRaiz,90);
-				break;
-			case 2:
-				printf("\n");
-				printf("\nEscolha um tipo de impress�o\n1 - InOrdem\n2 - PreOrdem\n3 - PosOrdem\n");
-				scanf("%d",&tipoImp);
-				printf("\nImpress�o %s\n",tipoImp == 1 ? "InOrdem":tipoImp == 2? "PreOrdem":"PosOrdem");
-				imprimir(pRaiz, tipoImp);
-				printf("\n");
-				break;
-			case 3:
-				printf("Digite o valor a ser removido: ");
-				scanf("%d",&valor);
-				pRaiz = remover(pRaiz, valor);
-				break;
-			case 4:
-				printf("\nDigite o valor a buscar: ");
-				scanf("%d",&valor);
-				if(buscar(pRaiz, valor))
-					printf("\nValor encontrado!\n");
-				else
-					printf("\nValor n�o encontrado!\n");
-				break;
-			case 5:
-				printf("\nAltura da �rvore: %d",alturaArv(pRaiz));
-				break;
-			case 6:
-				printf("\nDigite o valor do n� que quer saber a altura: ");
-				scanf("%d",&valor);
-				printf("\nAltura da sub-�rvore desse n� �: %d\n",alturaSubArv(pRaiz, valor));
-				break;
-			default:
-				printf("\nOp��o inv�lida.\n");
-			
-		}
-	}while(op != 0);
-		
+	No *raiz = NULL;
+	
+	
 	return 0;
 }
-
